@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/JustForCodin/chatv2/config"
+	"github.com/JustForCodin/chatv2/message"
 	"gorm.io/gorm"
 )
 
@@ -13,8 +16,9 @@ func main() {
 		panic(err)
 	}
 
-	messageRepo := NewMessageRepo(dbClient)
+	messageRepo := message.NewMessageRepo(dbClient)
 
 	message, err := messageRepo.GetMessages(1)
+	fmt.Println(message)
 
 }
