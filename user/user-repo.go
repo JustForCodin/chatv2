@@ -80,3 +80,9 @@ func (r *UserRepositoryImpl) DeleteUser(userID, initiatorID int64) (*User, error
 	r.db.Delete(&user)
 	return &user, r.err
 }
+
+func NewUserRepository(db *gorm.DB) UserRepository {
+	return &UserRepositoryImpl{
+		db: db,
+	}
+}
