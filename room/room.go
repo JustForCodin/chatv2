@@ -1,10 +1,14 @@
 package room
 
-import "time"
+import (
+	"time"
+
+	"github.com/JustForCodin/chatv2/user"
+)
 
 type Room struct {
 	ID        int64 `gorm:"primary_key;auto_increment;not_null"`
 	Name      string
-	CreatedBy time.Time
+	CreatedBy user.User
 	CreatedAt time.Time
 }

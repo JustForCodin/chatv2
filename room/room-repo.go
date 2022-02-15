@@ -1,9 +1,10 @@
 package room
 
 import (
-	"log"
+	"fmt"
+	"time"
 
-	"gorm.io/driver/mysql"
+	"github.com/JustForCodin/chatv2/user"
 	"gorm.io/gorm"
 )
 
@@ -19,32 +20,21 @@ type RoomRepoImpl struct {
 	err error
 }
 
-func (r *RoomRepoImpl) GetRooms(userID int64) ([]Room, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
+func (r *RoomRepoImpl) GetRooms(roomID int64) ([]Room, error) {
 	var rooms []Room
-	r.db.Where("id=?", userID).Find(&rooms)
+	r.db.Where("id=?", roomID).Find(&rooms)
 	return rooms, r.err
 }
 
 func (r *RoomRepoImpl) CreateRoom(userID int64, room Room) (*Room, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
+	room.CreatedAt = time.Now()
+	room.CreatedBy = user.User{ID: userID}
 	r.db.Create(room)
+	fmt.Println("New room created by user ", userID)
 	return &room, r.err
 }
 
 func (r *RoomRepoImpl) UpdateRoom(userID int64, room Room) (*Room, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
 	var roomUpdate Room
 	r.db.Where("id = ?, name = ?", roomUpdate.ID, roomUpdate.Name).Find(&roomUpdate)
 	room.Name = roomUpdate.Name
@@ -53,11 +43,6 @@ func (r *RoomRepoImpl) UpdateRoom(userID int64, room Room) (*Room, error) {
 }
 
 func (r *RoomRepoImpl) DeleteRoom(userID, roomID int64) (*Room, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
 	var room Room
 	r.db.Where("id = ?", room.ID).Find(&room)
 	r.db.Delete(&room)

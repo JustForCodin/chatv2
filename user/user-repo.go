@@ -1,9 +1,8 @@
 package user
 
 import (
-	"log"
+	"time"
 
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -26,42 +25,24 @@ type UserRepositoryImpl struct {
 }
 
 func (r *UserRepositoryImpl) GetUser(userID, initiatorID int64) (*User, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
 	var user User
 	r.db.Where("id=?", userID).Find(&user)
 	return &user, r.err
 }
 
 func (r *UserRepositoryImpl) GetUsers(userID int64, filter *UserFilter) ([]User, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
 	var users []User
 	r.db.Where("id=?, UserName=?", filter.ChatID, filter.UserName).Find(&users)
 	return users, r.err
 }
 
 func (r *UserRepositoryImpl) CreateUser(userID int64, user User) (*User, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
+	user.RegisteredAt = time.Now()
 	r.db.Create(user)
 	return &user, r.err
 }
 
 func (r *UserRepositoryImpl) UpdateUser(userID int64, user User) (*User, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
 	var userUpdate User
 	r.db.Where("text = ?", userUpdate.Name).Find(&userUpdate)
 	user.Name = userUpdate.Name
@@ -70,11 +51,6 @@ func (r *UserRepositoryImpl) UpdateUser(userID int64, user User) (*User, error) 
 }
 
 func (r *UserRepositoryImpl) DeleteUser(userID, initiatorID int64) (*User, error) {
-	r.db, r.err = gorm.Open(mysql.Open("text"), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
 	var user User
 	r.db.Where("name = ?", user.Name).Find(&user)
 	r.db.Delete(&user)

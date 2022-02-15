@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
+	"os/user"
 
 	"github.com/JustForCodin/chatv2/config"
 	"github.com/JustForCodin/chatv2/message"
+	"github.com/JustForCodin/chatv2/room"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -18,11 +19,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	dbClient.AutoMigrate(&user.User{}, &message.Message{}, &room.Room{})
 
 	messageRepo := message.NewMessageRepo(dbClient)
 
-	newMessage, err := messageRepo.CreateMessage(1, message.Message{ID: 1, Text: "Hello", RoomID: 1,
-		CreatedBy: time.Now(), CreatedAt: time.Now()})
+	newMessage, err := messageRepo.CreateMessage(1, message.Message{ID: 1, Text: "Hello", RoomID: 1})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,7 +35,7 @@ func main() {
 	}
 
 	fmt.Println(msg)
-	messageRepo.UpdateMessage(1, message.Message{Text: "New Msg", CreatedBy: time.Now(), CreatedAt: time.Now()})
+	messageRepo.UpdateMessage(1, message.Message{Text: "New Msg"})
 	messageRepo.GetMessages(1)
 	fmt.Println(msg)
 

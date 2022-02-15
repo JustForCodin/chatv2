@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/JustForCodin/chatv2/room"
+	"github.com/JustForCodin/chatv2/user"
 )
 
 type Message struct {
@@ -11,6 +12,6 @@ type Message struct {
 	Text      string
 	RoomID    int64
 	Room      room.Room
-	CreatedBy time.Time
+	CreatedBy user.UserDto
 	CreatedAt time.Time
 }

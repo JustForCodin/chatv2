@@ -2,12 +2,9 @@ package message
 
 import (
 	"fmt"
-	"log"
-	"os/user"
+	"time"
 
-	"github.com/JustForCodin/chatv2/config"
-	"github.com/JustForCodin/chatv2/room"
-	"gorm.io/driver/mysql"
+	"github.com/JustForCodin/chatv2/user"
 	"gorm.io/gorm"
 )
 
@@ -24,10 +21,6 @@ type MessageRepoImpl struct {
 }
 
 func (r *MessageRepoImpl) GetMessages(userID int64) ([]Message, error) {
-	r.db, r.err = gorm.Open(mysql.Open(config.GetConfig().MysqlDSN), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
 
 	user_exists := r.db.Raw("SELECT * FROM user WHERE user.id=%d LIMIT 1", userID)
 	if user_exists == nil {
@@ -41,24 +34,14 @@ func (r *MessageRepoImpl) GetMessages(userID int64) ([]Message, error) {
 }
 
 func (r *MessageRepoImpl) CreateMessage(userID int64, message Message) (*Message, error) {
-	r.db, r.err = gorm.Open(mysql.Open(config.GetConfig().MysqlDSN), &gorm.Config{
-		DisableForeignKeyConstraintWhenMigrating: true,
-	})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-	r.db.AutoMigrate(&Message{}, &user.User{}, &room.Room{})
+	message.CreatedAt = time.Now()
+	message.CreatedBy = user.UserDto{ID: userID}
 	r.db.Create(&message)
 	fmt.Printf("New message created by user %d\n", userID)
 	return &message, r.err
 }
 
 func (r *MessageRepoImpl) UpdateMessage(userID int64, message Message) (*Message, error) {
-	r.db, r.err = gorm.Open(mysql.Open(config.GetConfig().MysqlDSN), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
 	var messageUpdate Message
 	r.db.Where("text = ?", message.Text).Find(&messageUpdate)
 	messageUpdate.Text = message.Text
@@ -67,11 +50,6 @@ func (r *MessageRepoImpl) UpdateMessage(userID int64, message Message) (*Message
 }
 
 func (r *MessageRepoImpl) DeleteMessage(userID, messageID int64) (*Message, error) {
-	r.db, r.err = gorm.Open(mysql.Open(config.GetConfig().MysqlDSN), &gorm.Config{})
-	if r.err != nil {
-		log.Fatal(r.err)
-	}
-
 	user_exists := r.db.Raw("SELECT * FROM user WHERE user.id=%d LIMIT 1", userID)
 	if user_exists == nil {
 		panic("User " + string(userID) + "is not allowed to see messages")
