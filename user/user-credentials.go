@@ -1,6 +1,6 @@
 package user
 
 type UserCredentials struct {
-	Email string
+	Email    string `gorm:"unique;not_null"`
 	Password string
 }
