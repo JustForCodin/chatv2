@@ -7,9 +7,10 @@ import (
 func FromDto(dto MessageDTO) Message {
 	return Message{ID: dto.ID, Text: dto.Text, RoomID: dto.RoomID, Room: room.Room{
 		ID: dto.RoomID,
-	}}
+	}, CreatedBy: dto.CreatedBy, CreatedAt: dto.CreatedAt}
 }
 
 func ToDto(message Message) MessageDTO {
-	return MessageDTO{ID: message.ID, Text: message.Text, RoomID: message.Room.ID}
+	return MessageDTO{ID: message.ID, Text: message.Text, RoomID: message.Room.ID,
+		CreatedBy: message.CreatedBy, CreatedAt: message.CreatedAt}
 }

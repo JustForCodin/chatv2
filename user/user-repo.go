@@ -38,22 +38,21 @@ func (r *UserRepositoryImpl) GetUsers(userID int64, filter *UserFilter) ([]User,
 
 func (r *UserRepositoryImpl) CreateUser(userID int64, user User) (*User, error) {
 	user.RegisteredAt = time.Now()
-	r.db.Create(user)
+	r.db.Create(&user)
 	return &user, r.err
 }
 
 func (r *UserRepositoryImpl) UpdateUser(userID int64, user User) (*User, error) {
 	var userUpdate User
-	r.db.Where("text = ?", userUpdate.Name).Find(&userUpdate)
-	user.Name = userUpdate.Name
+	userUpdate.Name = user.Name
+	userUpdate.Email = user.Email
 	r.db.Save(&userUpdate)
 	return &userUpdate, r.err
 }
 
 func (r *UserRepositoryImpl) DeleteUser(userID, initiatorID int64) (*User, error) {
 	var user User
-	r.db.Where("name = ?", user.Name).Find(&user)
-	r.db.Delete(&user)
+	r.db.Where("id = ?", userID).Delete(&user)
 	return &user, r.err
 }
 

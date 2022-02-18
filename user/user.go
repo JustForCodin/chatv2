@@ -3,7 +3,7 @@ package user
 import "time"
 
 type User struct {
-	ID           int64 `gorm:"primary_key;auto_increment;not_null"`
+	ID           int64
 	Name         string
 	Email        string
 	Status       int8

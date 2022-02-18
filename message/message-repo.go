@@ -56,8 +56,7 @@ func (r *MessageRepoImpl) DeleteMessage(userID, messageID int64) (*Message, erro
 	}
 
 	var message Message
-	r.db.Where("id = ?", message.ID).Find(&message)
-	r.db.Delete(&message)
+	r.db.Where("id = ?", messageID).Delete(&message)
 	return &message, r.err
 }
 

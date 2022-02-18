@@ -37,15 +37,14 @@ func (r *RoomRepoImpl) CreateRoom(userID int64, room Room) (*Room, error) {
 func (r *RoomRepoImpl) UpdateRoom(userID int64, room Room) (*Room, error) {
 	var roomUpdate Room
 	r.db.Where("id = ?, name = ?", roomUpdate.ID, roomUpdate.Name).Find(&roomUpdate)
-	room.Name = roomUpdate.Name
+	roomUpdate.Name = room.Name
 	r.db.Save(&roomUpdate)
 	return &roomUpdate, r.err
 }
 
 func (r *RoomRepoImpl) DeleteRoom(userID, roomID int64) (*Room, error) {
 	var room Room
-	r.db.Where("id = ?", room.ID).Find(&room)
-	r.db.Delete(&room)
+	r.db.Where("id = ?", room.ID).Delete(&room)
 	return &room, r.err
 }
 

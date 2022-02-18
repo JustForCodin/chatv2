@@ -8,7 +8,7 @@ import (
 )
 
 type Message struct {
-	ID        int64 `gorm:"primary_key;auto_increment;not_null"`
+	ID        int64
 	Text      string
 	RoomID    int64
 	Room      room.Room
