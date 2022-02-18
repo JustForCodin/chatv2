@@ -1,0 +1,1 @@
+MYSQL_DSN="root:Alex1907#@tcp(127.0.0.1:3306)/chatdb"
