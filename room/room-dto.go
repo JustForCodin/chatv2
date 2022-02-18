@@ -9,6 +9,6 @@ import (
 type RoomDTO struct {
 	ID        int64 `gorm:"primary_key;auto_increment;not_null"`
 	Text      string
-	CreatedBy user.User
+	CreatedBy user.UserDto `gorm:"references:users.ID"`
 	CreatedAt time.Time
 }

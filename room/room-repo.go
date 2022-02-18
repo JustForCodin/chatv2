@@ -28,7 +28,7 @@ func (r *RoomRepoImpl) GetRooms(roomID int64) ([]Room, error) {
 
 func (r *RoomRepoImpl) CreateRoom(userID int64, room Room) (*Room, error) {
 	room.CreatedAt = time.Now()
-	room.CreatedBy = user.User{ID: userID}
+	room.CreatedBy = user.UserDto{ID: userID}
 	r.db.Create(room)
 	fmt.Println("New room created by user ", userID)
 	return &room, r.err

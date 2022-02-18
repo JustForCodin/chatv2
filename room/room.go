@@ -9,6 +9,6 @@ import (
 type Room struct {
 	ID        int64
 	Name      string
-	CreatedBy user.User
+	CreatedBy user.UserDto
 	CreatedAt time.Time
 }

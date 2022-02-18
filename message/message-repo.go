@@ -21,7 +21,6 @@ type MessageRepoImpl struct {
 }
 
 func (r *MessageRepoImpl) GetMessages(userID int64) ([]Message, error) {
-
 	user_exists := r.db.Raw("SELECT * FROM user WHERE user.id=%d LIMIT 1", userID)
 	if user_exists == nil {
 		panic("User " + string(userID) + "is not allowed to see messages")
